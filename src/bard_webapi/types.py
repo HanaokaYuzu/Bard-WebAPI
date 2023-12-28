@@ -5,12 +5,18 @@ from pydantic import BaseModel
 
 class Chat(BaseModel):
     """
-    Chat data to retrieve conversation history. Only if all 3 values are provided will the conversation history be retrieved.
+    Chat data to retrieve conversation history. Only if all 3 ids are provided will the conversation history be retrieved.
 
-    :optional param metadata: list of metadata [cid, rid, rcid], can be shorter than 3 elements, like [cid, rid] or [cid] only
-    :optional param cid: chat id, if provided together with metadata, will override the first value in metadata
-    :optional param rid: reply id, if provided together with metadata, will override the second value in metadata
-    :optional param rcid: reply choice id, if provided together with metadata, will override the third value in metadata
+    Parameters
+    ----------
+    metadata: list[str], optional
+        list of metadata [cid, rid, rcid], can be shorter than 3 elements, like [cid, rid] or [cid] only
+    cid: str, optional
+        chat id, if provided together with metadata, will override the first value in metadata
+    rid: str, optional
+        reply id, if provided together with metadata, will override the second value in metadata
+    rcid: str, optional
+        reply choice id, if provided together with metadata, will override the third value in metadata
     """
     metadata: Optional[list[str]] = None
     cid: Optional[str] = None  # chat id
@@ -73,9 +79,14 @@ class ModelOutput(BaseModel):
     """
     Classified output from bard.google.com
 
-    :param chat: updated chat data containing the most recent metadata
-    :param choices: list of all choices returned from bard
-    :optional param chosen: index of the chosen choice, by default will choose the first one
+    Parameters
+    ----------
+    chat: Chat
+        chat data containing the most recent metadata
+    choices: list[Choice]
+        list of all choices returned from bard
+    chosen: int, optional
+        index of the chosen choice, by default will choose the first one
     """
     chat: Chat
     choices: list[Choice]
