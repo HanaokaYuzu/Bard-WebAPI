@@ -1,16 +1,9 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=69", "setuptools_scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "bard-webapi"
-version = "0.1.0"
-dependencies = [
-    "httpx>=0.25.2",
-    "pydantic>=2.5.3",
-    "loguru>=0.7.2",
-]
-requires-python = ">=3.7"
 authors = [
     {name = "UZQueen"},
 ]
@@ -25,6 +18,13 @@ classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.11",
 ]
+requires-python = ">=3.7"
+dependencies = [
+    "httpx>=0.25.2",
+    "pydantic>=2.5.3",
+    "loguru>=0.7.2",
+]
+dynamic = ["version"]
 
 [project.urls]
 Repository = "https://github.com/HanaokaYuzu/Bard-WebAPI"
@@ -33,3 +33,7 @@ Issues = "https://github.com/HanaokaYuzu/Bard-WebAPI/issues"
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["bard_webapi"]
+
+[tool.setuptools_scm]
+version_scheme = "post-release"
+local_scheme = "no-local-version"
