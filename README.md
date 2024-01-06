@@ -2,19 +2,24 @@
 
 Reverse Engineered Async API for Google Bard
 
+## Installation
+
+```bash
+pip install bard-webapi
+```
+
 ## Authentication
 
-Go to <https://bard.google.com/>
-
-- F12 for console
-- Copy cookie values of `__Secure-1PSID` and `__Secure-1PSIDTS`
+- Go to <https://bard.google.com/> and login with your Google account
+- Press F12 for web inspector, go to `Network` tab and refresh the page
+- Click any request and copy cookie values of `__Secure-1PSID` and `__Secure-1PSIDTS`
 
 ## Usage
 
 ### Initialization
 
 ```python
-from src import BardClient
+from bard_webapi import BardClient
 
 Secure_1PSID = [COOKIE VALUE HERE]
 Secure_1PSIDTS = [COOKIE VALUE HERE]
