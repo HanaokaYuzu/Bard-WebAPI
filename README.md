@@ -28,36 +28,36 @@ client = BardClient(Secure_1PSID, Secure_1PSIDTS, proxy=None)
 await client.init()
 ```
 
-### One-time Chat
+### Generate contents from text inputs
 
 ```python
-response = await client.generate("Hello World!")
+response = await client.generate_content("Hello World!")
 print(response.text)
 ```
 
-### Chat with Persistent History
+### Conversations across multiple turns
 
 ```python
-chat = client.newchat()
-await client.generate("Briefly introduce Europe", chat=chat)
-response = await client.generate("What's the population there?", chat=chat)
-print(response.text)
+chat = client.start_chat()
+response1 = await chat.send_message("Briefly introduce Europe")
+response2 = await chat.send_message("What's the population there?")
+print(response1.text, response2.text, sep="\n----------------------------------\n")
 ```
 
-### Retrieve Images in Response
+### Retrieve images in response
 
 ```python
-response = await client.generate("Show me some pictures of cats")
+response = await client.generate_content("Send me some pictures of cats")
 images = response.images
 for image in images:
-    print(f"{image.alt}({image.url})", "\n")
+    print(f"{image.title}({image.url}) - {image.alt}", sep="\n")
 ```
 
 ### Check Other Answer Choices
 
 ```python
-response = await client.generate("What's the best Japanese dish in your mind? Choose one only.")
-choices = response.choices
-for choice in choices:
-    print(choice, "\n----------------------------------\n")
+response = await client.generate_content("What's the best Japanese dish in your mind? Choose one only.")
+candidates = response.candidates
+for candidate in candidates:
+    print(candidate, "\n----------------------------------\n")
 ```
