@@ -1,6 +1,6 @@
 # <img src="https://www.gstatic.com/lamda/images/favicon_v1_150160cddff7f294ce30.svg" width="35px" alt="Bard Icon" /> Bard-WebAPI
 
-Reverse Engineered Async API for Google Bard
+Bard-WebAPI is a reverse engineered asynchronous API for Google Bard, providing a simple but elegant interface inspired by official Gemini API.
 
 ## Installation
 
