@@ -11,6 +11,9 @@ class Image(BaseModel):
     def __str__(self):
         return f"{self.title}({self.url}) - {self.alt}"
 
+    def __repr__(self):
+        return f"Image(title='{self.title}', url='{len(self.url)<=20 and self.url or self.url[:8] + '...' + self.url[-12:]}', alt='{self.alt}')"
+
 
 class Candidate(BaseModel):
     rcid: str
@@ -19,6 +22,9 @@ class Candidate(BaseModel):
 
     def __str__(self):
         return self.text
+
+    def __repr__(self):
+        return f"Candidate(rcid='{self.rcid}', text='{len(self.text)<=20 and self.text or self.text[:20] + '...'}', images={self.images})"
 
 
 class ModelOutput(BaseModel):
@@ -41,6 +47,9 @@ class ModelOutput(BaseModel):
 
     def __str__(self):
         return self.text
+
+    def __repr__(self):
+        return f"ModelOutput(metadata={self.metadata}, chosen={self.chosen}, candidates={self.candidates})"
 
     @property
     def text(self):

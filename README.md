@@ -21,8 +21,9 @@ pip install bard-webapi
 ```python
 from bard_webapi import BardClient
 
-Secure_1PSID = [COOKIE VALUE HERE]
-Secure_1PSIDTS = [COOKIE VALUE HERE]
+# Replace "COOKIE VALUE HERE" with your actual cookie values as strings
+Secure_1PSID = "COOKIE VALUE HERE"
+Secure_1PSIDTS = "COOKIE VALUE HERE"
 
 client = BardClient(Secure_1PSID, Secure_1PSIDTS, proxy=None)
 await client.init()
@@ -32,16 +33,7 @@ await client.init()
 
 ```python
 response = await client.generate_content("Hello World!")
-print(response.text)
-```
-
-### Conversations across multiple turns
-
-```python
-chat = client.start_chat()
-response1 = await chat.send_message("Briefly introduce Europe")
-response2 = await chat.send_message("What's the population there?")
-print(response1.text, response2.text, sep="\n----------------------------------\n")
+print(response.text)  # Note: simply use print(response) to get the same output if you just want to see the response text
 ```
 
 ### Retrieve images in response
@@ -53,11 +45,25 @@ for image in images:
     print(f"{image.title}({image.url}) - {image.alt}", sep="\n")
 ```
 
-### Check Other Answer Choices
+### Conversations across multiple turns
 
 ```python
-response = await client.generate_content("What's the best Japanese dish in your mind? Choose one only.")
-candidates = response.candidates
-for candidate in candidates:
+chat = client.start_chat()  # A chat stores the metadata to keep a conversation continuous. It will automatically get updated after each turn
+response1 = await chat.send_message("Briefly introduce Europe")
+response2 = await chat.send_message("What's the population there?")
+print(response1.text, response2.text, sep="\n----------------------------------\n")
+```
+
+### Check and switch to other answer candidates
+
+```python
+chat = client.start_chat()
+response = await chat.send_message("What's the best Japanese dish in your mind? Choose one only.")
+for candidate in response.candidates:
     print(candidate, "\n----------------------------------\n")
+
+# Control the ongoing conversation flow by choosing candidate manually
+new_candidate = chat.choose_candidate(index=1) # Choose the second candidate here
+followup_response = await chat.send_message("Tell me more about it.")  # Will generate contents based on the chosen candidate
+print(new_candidate, followup_response, sep="\n----------------------------------\n")
 ```

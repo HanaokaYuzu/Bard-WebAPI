@@ -128,7 +128,7 @@ class BardClient:
             output = ModelOutput(metadata=body[1], candidates=candidates)
 
             if isinstance(chat, ChatSession):
-                chat.output = output
+                chat.last_output = output
 
             return output
 
@@ -163,7 +163,7 @@ class ChatSession:
     """
 
     # @properties needn't have their slots pre-defined
-    __slots__ = ["__metadata", "client", "output"]
+    __slots__ = ["__metadata", "client", "last_output"]
 
     def __init__(
         self,
@@ -175,7 +175,7 @@ class ChatSession:
     ):
         self.__metadata: list[Optional[str]] = [None, None, None]
         self.client: BardClient = client
-        self.output: Optional[ModelOutput] = None  # last output data
+        self.last_output: Optional[ModelOutput] = None
 
         if metadata:
             self.metadata = metadata
@@ -187,14 +187,14 @@ class ChatSession:
             self.rcid = rcid
 
     def __str__(self):
-        return f"ChatSession(cid={self.cid}, rid={self.rid}, rcid={self.rcid})"
+        return f"ChatSession(cid='{self.cid}', rid='{self.rid}', rcid='{self.rcid}')"
 
     __repr__ = __str__
 
     def __setattr__(self, name: str, value: Any) -> None:
         super().__setattr__(name, value)
         # update conversation history when last output is updated
-        if name == "output" and isinstance(value, ModelOutput):
+        if name == "last_output" and isinstance(value, ModelOutput):
             self.metadata = value.metadata
             self.rcid = value.rcid
 
@@ -215,6 +215,27 @@ class ChatSession:
             of images in the default reply, `ModelOutput.candidates` to get a list of all answer candidates in the output
         """
         return await self.client.generate_content(prompt, self)
+
+    def choose_candidate(self, index: int) -> ModelOutput:
+        """
+        Choose a candidate from the last `ModelOutput` to control the ongoing conversation flow.
+
+        Parameters
+        ----------
+        index: `int`
+            Index of the candidate to choose, starting from 0
+        """
+        if not self.last_output:
+            raise Exception("No previous output data found in this chat session.")
+
+        if index >= len(self.last_output.candidates):
+            raise ValueError(
+                f"Index {index} exceeds the number of candidates in last model output."
+            )
+
+        self.last_output.chosen = index
+        self.rcid = self.last_output.rcid
+        return self.last_output
 
     @property
     def metadata(self):
